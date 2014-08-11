@@ -83,7 +83,38 @@ class Api extends CI_Controller {
 
 	public function getDetail() 
 	{
+		if(isset($_REQUEST['url'])) {
+			$param['url'] = $_REQUEST['url'];
+		} else {
+			die("wrong api call");
+		}
+		$param['access_key'] = "";
+		if (isset($_REQUEST['access_key'])) $param['access_key'] = $_REQUEST['access_key'];
+			//else die("wrong api call");
+		$access_key = md5($param['url'].SALT);
+		if ($param['access_key'] !== $access_key ) {
+			//die ("Wrong access_key");
+		}
+		$response = array ('test','hi');
+		$content = file_get_contents($param['url']);
+		$content = preg_replace('/\s+/', ' ', $content);
+		$header_pattern = '/<h2 class="art-PostHeader"><a.*?>(.*?)<\/a><\/h2>/';
+		$content_pattern = '/<div class="art-PostContent">(.*?)<\/div> <div class="cleared">/';
+		preg_match_all($header_pattern, $content, $headers);
+		preg_match_all($content_pattern, $content, $contents);
+		print_r($headers);
+		print_r($contents);
+		die(json_encode($response));
+	}
 
+	public function test() {
+		$list = file_get_contents("http://apinews.local/api/getList");
+		$result = json_decode($list,true);
+		//print_r($result);
+		$test_url = $result['columnists'][0]['url'];
+		$detail = file_get_contents("http://apinews.local/api/getDetail?url=".$test_url);
+		echo $detail;
+		die;
 	}
 }
 
