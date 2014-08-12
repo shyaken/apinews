@@ -102,8 +102,12 @@ class Api extends CI_Controller {
 		$content_pattern = '/<div class="art-PostContent">(.*?)<\/div> <div class="cleared">/';
 		preg_match_all($header_pattern, $content, $headers);
 		preg_match_all($content_pattern, $content, $contents);
-		print_r($headers);
-		print_r($contents);
+		$raw_content = $content[1][0];
+		$raw_content = str_replace('</p>', "\n", $raw_content);
+		$raw_content = str_replace('<p>', "", $raw_content);
+		$response['header'] = $header[1][0];
+		$response['html_content'] = $content[1][0];
+		$response['raw_content'] = $raw_content;
 		die(json_encode($response));
 	}
 
