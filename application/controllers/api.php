@@ -49,16 +49,25 @@ class Api extends CI_Controller {
 		} else {
 			$param['page'] = 1;
 		}
+
 		if(isset($_REQUEST['cat_id'])) {
 			$param['cat_id'] = $_REQUEST['cat_id'];
 			$validate .= $param['cat_id'];
 		}
-		if (isset($_REQUEST['access_key'])) $param['access_key'] = $_REQUEST['access_key'];
-			else $param['access_key'] = "";
-		if (isset($_REQUEST['t'])) $param['time'] = $_REQUEST['t'];{
-			else $param['time'] = time();
+
+		if (isset($_REQUEST['access_key'])) {
+			$param['access_key'] = $_REQUEST['access_key'];
+		} else {
+			$param['access_key'] = "";
+		}
+
+		if (isset($_REQUEST['t'])) {
+			$param['time'] = $_REQUEST['t'];
+		} else { 
+			$param['time'] = time();
 			$validate .= $param['time'];
 		}
+
 		$validate .= SALT;
 		$access_key = md5($validate);
 		if ($param['access_key'] !== $access_key ) {
@@ -67,72 +76,99 @@ class Api extends CI_Controller {
 		$response = array ();
 		$response['category_list'] = $this->category;
 		if(isset($param['cat_id'])) {
-			$response[$param['cat_id']]	 = $this->getCategoryDetail($param['cat_id']);
+			$response[$param['cat_id']]	 = $this->getCategoryDetail($param['cat_id'],$param['page']);
 		} else {
-			foreach (array_merge($this->category,$this->specific_category) as $key => $value) {
+			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
 			}
 		}
 		die(json_encode($response));
 	}
 
-	function getSpecificCat ($cat_id,$page) {
-		
-	}
-
-	private function getCategoryDetail($category_id,$page) {
-		if (isset($this->specific_category[$category_id])) {
-			$content = file_get_contents($this->homepage_url);
-			return $this->getSpecificCat($cat_id,$content)
-		}
-		$url = $this->homepage_url."category/".$category_id."/";
-		if (intval($page) > 1) {
-			$url = $url . 'page/'.$page;
+	function getSpecificCat ($cat_id,$page,$content = null) {
+		$url = $this->homepage_url;
+		if ($page >= 2) {
+			$url .= "page/$page/";
 		}
 		$content = file_get_contents($url);
-		$content = preg_replace('/\s+/m', " ", $content);
+		$content = preg_replace('/\s+/m', ' ', $content);
+		if ($cat_id === 'sticky_recent_article') {
+			$sticky_content = strstr($content, 'Sticky & Recent Articles');
+			return $this->getCategoryDetail(0,0,$sticky_content);
+		}
+		else return array();
+	}
+
+	private function getCategoryDetail($category_id,$page,$content = null) {
+		if (isset($this->specific_category[$category_id])) {
+			return $this->getSpecificCat($category_id,$page);
+		}
+		if($content === null) {
+			$url = $this->homepage_url."category/".$category_id."/";
+			if (intval($page) > 1) {
+				$url = $url . 'page/'.$page;
+			}
+			$content = file_get_contents($url);
+			$content = preg_replace('/\s+/m', " ", $content);
+		}
+		
 		$header_pattern = '/<h2 class="PostHeaderIcon-wrapper" style="margin:0;padding:0;"><a href="(.*?)".*?>(.*?)<\/a><\/h2>/';
 		$content_pattern = '/<div class="cContent"><p>(.*?)<a/m';
+		$img_pattern = '/<div class="PostContent"> <a href=".*?" rel="bookmark" title=".*?"><img class="alignleft" src="(.*?)" .*?><\/a>/';
 		$headers = array();
 		$contents = array();
+		$imgs = array();
 		preg_match_all($header_pattern, $content, $headers);
 		preg_match_all($content_pattern, $content, $contents);
+		preg_match_all($img_pattern, $content, $imgs);
 		$result = array();
 		foreach($headers[2] as $key => $value) {
-			$result[$key]['header'] = $value;
-			$result[$key]['content'] = $contents[1][$key];
-			$result[$key]['url'] = $headers[1][$key];
+			$result[$key]['title'] = $value;
+			$result[$key]['description'] = $contents[1][$key];
+			$result[$key]['id'] = str_replace($this->homepage_url, '', $headers[1][$key]);
+			$result[$key]['img'] = $imgs[1][$key];
 		}
 		return $result;
 	}
 
 	public function getDetail() 
 	{
-		if(isset($_REQUEST['url'])) {
-			$param['url'] = $_REQUEST['url'];
+		$param['id'] = "";
+		$param['url'] = "";
+		$param['t'] = "";
+		if(isset($_REQUEST['id'])) {
+			$param['id'] = $_REQUEST['id'];
+			$param['url'] = $this->homepage_url.$_REQUEST['id'];
 		} else {
 			die("wrong api call");
 		}
 		$param['access_key'] = "";
 		if (isset($_REQUEST['access_key'])) $param['access_key'] = $_REQUEST['access_key'];
 			else die("wrong api call");
-		$access_key = md5($param['url'].SALT);
+		if (isset($_REQUEST['t'])) $param['t'] = $_REQUEST['t'];
+			else die("wrong api call");
+		$access_key = md5($param['id'].$param['t'].SALT);
 		if ($param['access_key'] !== $access_key ) {
 			die ("Wrong access_key");
 		}
 		$response = array ('test','hi');
 		$content = file_get_contents($param['url']);
 		$content = preg_replace('/\s+/', ' ', $content);
+		$headers = array();
+		$contents = array();
+		$date = array();
 		$header_pattern = '/<h2 class="art-PostHeader"><a.*?>(.*?)<\/a><\/h2>/';
 		$content_pattern = '/<div class="art-PostContent">(.*?)<\/div> <div class="cleared">/';
+		$date_pattern = '/<img src=".*?PostDateIcon\.png.*?".*?>(.*?)<img/';
 		preg_match_all($header_pattern, $content, $headers);
 		preg_match_all($content_pattern, $content, $contents);
-		$raw_content = $content[1][0];
-		$raw_content = str_replace('</p>', "\n", $raw_content);
-		$raw_content = str_replace('<p>', "", $raw_content);
-		$response['header'] = $header[1][0];
-		$response['html_content'] = $content[1][0];
-		$response['raw_content'] = $raw_content;
+		preg_match_all($date_pattern, $content, $date);
+		$raw_content = $contents[1][0];
+		$raw_content = preg_replace('/<[^>]*>/', " ", $raw_content);
+		$response['header'] = $headers[1][0];
+		//$response['html_content'] = $contents[1][0];
+		$response['content'] = $raw_content;
+		$response['date'] = trim(str_replace('|', '', $date[1][0]));
 		die(json_encode($response));
 	}
 
