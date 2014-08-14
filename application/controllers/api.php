@@ -30,6 +30,10 @@ class Api extends CI_Controller {
 		'sports' => 'Sports',
 		'zassorted' => 'Z-Assorted'
 		);
+	private $specific_category = array (
+		'feature_article' => 'Featured Articles',
+		'sticky_recent_article' => 'Sticky & Recent Articles'
+		);
 
 	public function index()
 	{
@@ -38,28 +42,49 @@ class Api extends CI_Controller {
 
 	public function getList()
 	{
+		$validate = "";
 		if(isset($_REQUEST['page'])) {
 			$param['page'] = $_REQUEST['page'];
+			$validate .= $param['page'];
 		} else {
 			$param['page'] = 1;
 		}
+		if(isset($_REQUEST['cat_id'])) {
+			$param['cat_id'] = $_REQUEST['cat_id'];
+			$validate .= $param['cat_id'];
+		}
 		if (isset($_REQUEST['access_key'])) $param['access_key'] = $_REQUEST['access_key'];
 			else $param['access_key'] = "";
-		if (isset($_REQUEST['t'])) $param['time'] = $_REQUEST['t'];
+		if (isset($_REQUEST['t'])) $param['time'] = $_REQUEST['t'];{
 			else $param['time'] = time();
-		$access_key = md5($param['page'].$param['time'].SALT);
+			$validate .= $param['time'];
+		}
+		$validate .= SALT;
+		$access_key = md5($validate);
 		if ($param['access_key'] !== $access_key ) {
 			//die ("Wrong access_key");
 		}
 		$response = array ();
 		$response['category_list'] = $this->category;
-		foreach ($this->category as $key => $value) {
-			$response[$key] = $this->getCategoryDetail($key,$param['page']);
+		if(isset($param['cat_id'])) {
+			$response[$param['cat_id']]	 = $this->getCategoryDetail($param['cat_id']);
+		} else {
+			foreach (array_merge($this->category,$this->specific_category) as $key => $value) {
+				$response[$key] = $this->getCategoryDetail($key,$param['page']);
+			}
 		}
 		die(json_encode($response));
 	}
 
+	function getSpecificCat ($cat_id,$page) {
+		
+	}
+
 	private function getCategoryDetail($category_id,$page) {
+		if (isset($this->specific_category[$category_id])) {
+			$content = file_get_contents($this->homepage_url);
+			return $this->getSpecificCat($cat_id,$content)
+		}
 		$url = $this->homepage_url."category/".$category_id."/";
 		if (intval($page) > 1) {
 			$url = $url . 'page/'.$page;
@@ -90,10 +115,10 @@ class Api extends CI_Controller {
 		}
 		$param['access_key'] = "";
 		if (isset($_REQUEST['access_key'])) $param['access_key'] = $_REQUEST['access_key'];
-			//else die("wrong api call");
+			else die("wrong api call");
 		$access_key = md5($param['url'].SALT);
 		if ($param['access_key'] !== $access_key ) {
-			//die ("Wrong access_key");
+			die ("Wrong access_key");
 		}
 		$response = array ('test','hi');
 		$content = file_get_contents($param['url']);
