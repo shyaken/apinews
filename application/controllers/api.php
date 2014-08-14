@@ -90,13 +90,25 @@ class Api extends CI_Controller {
 		if ($page >= 2) {
 			$url .= "page/$page/";
 		}
-		$content = file_get_contents($url);
+		if($content === null) $content = file_get_contents($url);
 		$content = preg_replace('/\s+/m', ' ', $content);
 		if ($cat_id === 'sticky_recent_article') {
 			$sticky_content = strstr($content, 'Sticky & Recent Articles');
 			return $this->getCategoryDetail(0,0,$sticky_content);
 		}
-		else return array();
+		else {
+			//echo $content;
+			$post_pattern = '/<div class="board_item"> <p><a href="(.*?)"><img src="(.*?)".*?>.*?<a.*?>(.*?)<\/a><\/strong>(.*?)<\/p>/';
+			preg_match_all($post_pattern, $content, $posts);
+			$result = array();
+			foreach ($posts[0] as $key => $value) {
+				$result[$key]['title'] = $posts[3][$key];
+				$result[$key]['description'] = $posts[4][$key];
+				$result[$key]['id'] = str_replace($this->homepage_url, '', $posts[1][$key]);
+				$result[$key]['img'] = $posts[2][$key];
+			}
+			return $result;
+		}
 	}
 
 	private function getCategoryDetail($category_id,$page,$content = null) {
