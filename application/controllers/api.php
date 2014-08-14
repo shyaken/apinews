@@ -151,6 +151,8 @@ class Api extends CI_Controller {
 		$access_key = md5($validate);
 		if ($param['access_key'] !== $access_key ) {
 			echo $validate;
+			echo $access_key;
+			echo $param['access_key'];
 			die ("Wrong access_key");
 		}
 		$response = array ('test','hi');
