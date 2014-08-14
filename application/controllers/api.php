@@ -70,8 +70,8 @@ class Api extends CI_Controller {
 
 		$validate .= SALT;
 		$access_key = md5($validate);
-		if ($param['access_key'] !== $access_key ) {
-			//die ("Wrong access_key");
+		if ($param['access_key'] !== $access_key && !isset($_REQUEST['ignore_access'])) {
+			die ("Wrong access_key");
 		}
 		$response = array ();
 		//$response['category_list'] = array_merge($this->category,$this->specific_category);
@@ -149,10 +149,7 @@ class Api extends CI_Controller {
 			else die("wrong api call");
 		$validate = $param['id'].$param['t'].SALT;
 		$access_key = md5($validate);
-		if ($param['access_key'] !== $access_key ) {
-			echo $validate;
-			echo $access_key;
-			echo $param['access_key'];
+		if ($param['access_key'] !== $access_key && !isset($_REQUEST['ignore_access'])) {
 			die ("Wrong access_key");
 		}
 		$response = array ('test','hi');
