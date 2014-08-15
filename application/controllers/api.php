@@ -67,13 +67,16 @@ class Api extends CI_Controller {
 			$param['time'] = time();
 			$validate .= $param['time'];
 		}
-
+		$response = array ();
+		$response['status'] = true;
 		$validate .= SALT;
 		$access_key = md5($validate);
 		if ($param['access_key'] !== $access_key && !isset($_REQUEST['ignore_access'])) {
-			die ("Wrong access_key");
+			$response['status'] = false;
+			$response['message'] = "Wrong access_key";
+			echo json_encode($response);
+			die;
 		}
-		$response = array ();
 		//$response['category_list'] = array_merge($this->category,$this->specific_category);
 		if(isset($param['cat_id'])) {
 			$response[$param['cat_id']]	 = $this->getCategoryDetail($param['cat_id'],$param['page']);
@@ -148,23 +151,35 @@ class Api extends CI_Controller {
 		$param['id'] = "";
 		$param['url'] = "";
 		$param['t'] = "";
+		$response = array();
+		$response['status'] = true;
 		if(isset($_REQUEST['id'])) {
 			$param['id'] = $_REQUEST['id'];
 			$param['url'] = $this->homepage_url.$_REQUEST['id'];
 		} else {
-			die("wrong api call");
+			$response['status'] = false;
+			$response['message'] = "id is required in this api";
 		}
 		$param['access_key'] = "";
 		if (isset($_REQUEST['access_key'])) $param['access_key'] = $_REQUEST['access_key'];
-			else die("wrong api call");
+			else {
+				$response['status'] = false;
+				$response['message'] = "access_key is required in this api";
+			}
 		if (isset($_REQUEST['t'])) $param['t'] = $_REQUEST['t'];
-			else die("wrong api call");
+			else {
+				$response['status'] = false;
+				$response['message'] = "time is required in this api";
+			}
 		$validate = $param['id'].$param['t'].SALT;
 		$access_key = md5($validate);
 		if ($param['access_key'] !== $access_key && !isset($_REQUEST['ignore_access'])) {
-			die ("Wrong access_key");
+			$response['status'] = false;
+			$response['message'] = "access_key is invalid";
 		}
-		$response = array ('test','hi');
+		if($response['status'] === false) {
+			die(json_encode($response));
+		}
 		$content = file_get_contents($param['url']);
 		$content = preg_replace('/\s+/', ' ', $content);
 		$headers = array();
