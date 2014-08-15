@@ -63,6 +63,7 @@ class Api extends CI_Controller {
 
 		if (isset($_REQUEST['t'])) {
 			$param['time'] = $_REQUEST['t'];
+			$validate .= $param['time'];
 		} else { 
 			$param['time'] = time();
 			$validate .= $param['time'];
