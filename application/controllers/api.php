@@ -64,7 +64,7 @@ class Api extends CI_Controller {
 		if (isset($_REQUEST['t'])) {
 			$param['time'] = $_REQUEST['t'];
 			$validate .= $param['time'];
-			$timediff = abs($param['time'] - time())
+			$timediff = abs($param['time'] - time());
 			if ($timediff > 24*60*60) {
 				$response['status'] = false;
 				$response['message'] = "access_key has been expired";
@@ -176,7 +176,7 @@ class Api extends CI_Controller {
 			}
 		if (isset($_REQUEST['t'])) {
 			$param['t'] = $_REQUEST['t'];
-			$timediff = abs($param['t'] - time())
+			$timediff = abs($param['t'] - time());
 			if ($timediff > 24*60*60) {
 				$response['status'] = false;
 				$response['message'] = "access_key has been expired";
