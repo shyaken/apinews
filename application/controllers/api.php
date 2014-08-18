@@ -93,7 +93,15 @@ class Api extends CI_Controller {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
 			}
 		}
-		die(json_encode($response));
+		if(!isset($_REQUEST['format']) || $_REQUEST['format'] !== 'ios') {
+			die(json_encode($response));	
+		} else {
+			$ios_resposne = array ();
+			foreach ($response as $key => $value) {
+				$ios_resposne[] = array ('category' => $key, 'data' => $value);
+			}
+			die(json_encode($response));
+		}
 	}
 
 	function getSpecificCat ($cat_id,$page,$content = null) {
