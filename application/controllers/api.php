@@ -96,9 +96,9 @@ class Api extends CI_Controller {
 		if(!isset($_REQUEST['format']) || $_REQUEST['format'] !== 'ios') {
 			die(json_encode($response));	
 		} else {
-			$ios_resposne = array ();
+			$ios_response = array ();
 			foreach ($response as $key => $value) {
-				$ios_resposne[] = array ('category' => $key, 'data' => $value);
+				$ios_response[] = array ('category' => $key, 'data' => $value);
 			}
 			die(json_encode($ios_response));
 		}
