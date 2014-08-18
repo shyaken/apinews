@@ -114,7 +114,7 @@ class Api extends CI_Controller {
 			$result = array();
 			foreach ($posts[0] as $key => $value) {
 				$result[$key]['title'] = $posts[3][$key];
-				$result[$key]['description'] = $posts[4][$key];
+				//$result[$key]['description'] = $posts[4][$key];
 				$result[$key]['id'] = str_replace($this->homepage_url, '', $posts[1][$key]);
 				$result[$key]['img'] = $posts[2][$key];
 			}
