@@ -28,7 +28,8 @@ class Api extends CI_Controller {
 		'revisited' => 'Revisited',
 		'snippets' => 'Snippets',
 		'sports' => 'Sports',
-		'zassorted' => 'Z-Assorted'
+		'zassorted' => 'Z-Assorted',
+		'chinese-section' => 'Chinese'
 		);
 	private $specific_category = array (
 		'feature_article' => 'Featured Articles',
@@ -93,17 +94,14 @@ class Api extends CI_Controller {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
 			}
 		}
-		if(!isset($_REQUEST['format']) || $_REQUEST['format'] !== 'ios') {
-			die(json_encode($response));	
-		} else {
-			$ios_response = array ();
-			$ios_response['status'] = $response['status'];
-			unset($response['status']);
-			foreach ($response as $key => $value) {
-				$ios_response['data'][] = array ('category' => $key, 'data' => $value);
-			}
-			die(json_encode($ios_response));
+		$ios_response = array ();
+		$ios_response['status'] = $response['status'];
+		unset($response['status']);
+		foreach ($response as $key => $value) {
+			$ios_response['data'][] = array ('category' => $key, 'data' => $value);
 		}
+		die(json_encode($ios_response));
+		
 	}
 
 	function getSpecificCat ($cat_id,$page,$content = null) {
