@@ -97,8 +97,10 @@ class Api extends CI_Controller {
 			die(json_encode($response));	
 		} else {
 			$ios_response = array ();
+			$ios_response['status'] = $response['status'];
+			unset($response['status']);
 			foreach ($response as $key => $value) {
-				$ios_response[] = array ('category' => $key, 'data' => $value);
+				$ios_response['data'][] = array ('category' => $key, 'data' => $value);
 			}
 			die(json_encode($ios_response));
 		}
