@@ -93,7 +93,7 @@ class Api extends CI_Controller {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
 			}
 		}
-		if(!isset($_REQUEST['format'])) {
+		if(!isset($_REQUEST['format']) || $_REQUEST['format'] !== 'ios') {
 			die(json_encode($response));	
 		} else {
 			$ios_resposne = array ();
