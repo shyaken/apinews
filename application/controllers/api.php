@@ -136,18 +136,18 @@ class Api extends CI_Controller {
 		}
 		
 		$header_pattern = '/<h2 class="PostHeaderIcon-wrapper" style="margin:0;padding:0;"><a href="(.*?)".*?>(.*?)<\/a><\/h2>/';
-		$content_pattern = '/<div class="cContent"><p>(.*?)<a/m';
+		//$content_pattern = '/<div class="cContent"><p>(.*?)<a/m';
 		$img_pattern = '/<div class="PostContent"> <a href=".*?" rel="bookmark" title=".*?"><img class="alignleft" src="(.*?)" .*?><\/a>/';
 		$headers = array();
 		$contents = array();
 		$imgs = array();
 		preg_match_all($header_pattern, $content, $headers);
-		preg_match_all($content_pattern, $content, $contents);
+		//preg_match_all($content_pattern, $content, $contents);
 		preg_match_all($img_pattern, $content, $imgs);
 		$result = array();
 		foreach($headers[2] as $key => $value) {
 			$result[$key]['title'] = $value;
-			$result[$key]['description'] = $contents[1][$key];
+			//$result[$key]['description'] = $contents[1][$key];
 			$result[$key]['id'] = str_replace($this->homepage_url, '', $headers[1][$key]);
 			$result[$key]['img'] = $imgs[1][$key];
 		}
