@@ -218,8 +218,8 @@ class Api extends CI_Controller {
 		$raw_content = $contents[1][0];
 		$raw_content = preg_replace('/<[^>]*>/', " ", $raw_content);
 		$response['header'] = $headers[1][0];
-		//$response['html_content'] = $contents[1][0];
-		$response['content'] = $raw_content;
+		$response['html_content'] = $contents[1][0];
+		//$response['content'] = $raw_content;
 		$response['date'] = trim(str_replace('|', '', $date[1][0]));
 		die(json_encode($response));
 	}
