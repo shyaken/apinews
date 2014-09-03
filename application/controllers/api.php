@@ -148,6 +148,7 @@ class Api extends CI_Controller {
 			if (intval($page) > 1) {
 				$url = $url . 'page/'.$page;
 			}
+			echo $url;
 			$content = file_get_contents($url);
 			$content = preg_replace('/\s+/m', " ", $content);
 		}
