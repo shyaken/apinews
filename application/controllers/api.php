@@ -94,8 +94,6 @@ class Api extends CI_Controller {
 			$res = array();
 			for ($i = 0 ; $i < $this->num_of_page; $i++) {
 				$res = array_merge($res, $this->getCategoryDetail($param['cat_id'],$first_page + $i));
-				echo $i;
-				print_r($res);
 			}
 			$response[$param['cat_id']]	 = $res;
 		} else {
@@ -148,7 +146,6 @@ class Api extends CI_Controller {
 			if (intval($page) > 1) {
 				$url = $url . 'page/'.$page.'/';
 			}
-			echo $url;
 			$content = file_get_contents($url);
 			$content = preg_replace('/\s+/m', " ", $content);
 		}
