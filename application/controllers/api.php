@@ -35,6 +35,7 @@ class Api extends CI_Controller {
 		'feature_article' => 'Featured Articles',
 		'sticky_recent_article' => 'Sticky & Recent Articles'
 		);
+	private $num_of_page = 5;
 
 	public function index()
 	{
@@ -62,6 +63,8 @@ class Api extends CI_Controller {
 			$param['access_key'] = "";
 		}
 
+		$first_page = ($param['page'] - 1) * 5 + 1;
+
 		if (isset($_REQUEST['t'])) {
 			$param['time'] = $_REQUEST['t'];
 			$validate .= $param['time'];
@@ -88,7 +91,11 @@ class Api extends CI_Controller {
 		}
 		//$response['category_list'] = array_merge($this->category,$this->specific_category);
 		if(isset($param['cat_id'])) {
-			$response[$param['cat_id']]	 = $this->getCategoryDetail($param['cat_id'],$param['page']);
+			$res = array();
+			for ($i = 0 ; $i < $num_of_page; $i++) {
+				$res = array_merge($res, $this->getCategoryDetail($param['cat_id'],$first_page + $i));
+			}
+			$response[$param['cat_id']]	 = $response;
 		} else {
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
