@@ -227,7 +227,14 @@ class Api extends CI_Controller {
 		$response['header'] = $headers[1][0];
 		$response['html_content'] = $contents[1][0];
 		//$response['content'] = $raw_content;
-		$response['date'] = trim(str_replace('|', '', $date[1][0]));
+		if(isset($date[1][0])) {
+			$response['date'] = trim(str_replace('|', '', $date[1][0]));
+		} else {
+			$response = array (
+				'status' => false,
+				'message' => 'This page has been deleted'
+			);
+		}
 		die(json_encode($response));
 	}
 
