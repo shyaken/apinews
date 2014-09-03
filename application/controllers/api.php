@@ -146,7 +146,7 @@ class Api extends CI_Controller {
 		if($content === null) {
 			$url = $this->homepage_url."category/".$category_id."/";
 			if (intval($page) > 1) {
-				$url = $url . 'page/'.$page;
+				$url = $url . 'page/'.$page.'/';
 			}
 			echo $url;
 			$content = file_get_contents($url);
