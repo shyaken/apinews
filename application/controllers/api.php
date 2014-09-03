@@ -92,7 +92,7 @@ class Api extends CI_Controller {
 		//$response['category_list'] = array_merge($this->category,$this->specific_category);
 		if(isset($param['cat_id'])) {
 			$res = array();
-			for ($i = 0 ; $i < $num_of_page; $i++) {
+			for ($i = 0 ; $i < $this->num_of_page; $i++) {
 				$res = array_merge($res, $this->getCategoryDetail($param['cat_id'],$first_page + $i));
 			}
 			$response[$param['cat_id']]	 = $response;
