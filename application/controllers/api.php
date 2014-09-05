@@ -177,7 +177,7 @@ class Api extends CI_Controller {
 		$response = array();
 		$response['status'] = true;
 		if(isset($_REQUEST['id'])) {
-			$param['id'] = urlencode($_REQUEST['id']);
+			$param['id'] = $_REQUEST['id'];
 			$param['url'] = $this->homepage_url.$_REQUEST['id'];
 		} else {
 			$response['status'] = false;
@@ -203,9 +203,7 @@ class Api extends CI_Controller {
 				$response['message'] = "time is required in this api";
 			}
 		$validate = $param['id'].$param['t'].SALT;
-		echo $validate;
 		$access_key = md5($validate);
-		echo $access_key;
 		if ($param['access_key'] !== $access_key && !isset($_REQUEST['ignore_access'])) {
 			$response['status'] = false;
 			$response['message'] = "access_key is invalid";
