@@ -41,7 +41,6 @@ class Crawl extends CI_Controller{
 		echo "Start crawling content for $cat_id at page $page\n";
 		$result = $this->getCategoryDetail($cat_id,$page);
 		$this->updateDb($result);
-		die;
 		echo "Finish crawling data for $cat_id page $page\n";
 	}
 
@@ -118,12 +117,10 @@ class Crawl extends CI_Controller{
 	public function updateDb($params) {
 		foreach($params as $record) {
 			$checkExist = $this->db->get_where('records',array('post_id' => $record['post_id']));	
-			print_r($checkExist);
 			if(intval($checkExist->num_rows) > 0) {
 				echo "existed record, continue";
 				continue;
 			}
-			echo "insterting record".json_encode($record);
 			$this->db->insert('records',$record);
 		}
 	}
