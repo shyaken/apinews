@@ -119,7 +119,7 @@ class Crawl extends CI_Controller{
 		foreach($params as $record) {
 			$checkExist = $this->db->get_where('records',array('post_id' => $record['post_id']));	
 			print_r($checkExist);
-			if(count($checkExist) > 0) {
+			if(intval($checkExist->num_rows) > 0) {
 				echo "existed record, continue";
 				continue;
 			}
