@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class crawler extends CI_Controller{
+class Crawl extends CI_Controller{
 
 	/**
 	 * Index Page for this controller.
