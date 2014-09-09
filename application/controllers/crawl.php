@@ -42,6 +42,7 @@ class Crawl extends CI_Controller{
 		$result = $this->getCategoryDetail($cat_id,$page);
 		print_r($result);
 		$this->updateDb($result);
+		die;
 		echo "Finish crawling data for $cat_id page $page\n";
 	}
 
