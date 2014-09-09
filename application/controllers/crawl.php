@@ -117,8 +117,8 @@ class Crawl extends CI_Controller{
 
 	public function updateDb($params) {
 		foreach($params as $record) {
-			echo "updating db for record ".json_encode($record);
 			$checkExist = $this->db->get_where('records',array('post_id' => $record['post_id']));	
+			print_r($checkExist);
 			if(count($checkExist) > 0) {
 				echo "existed record, continue";
 				continue;
