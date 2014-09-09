@@ -53,7 +53,7 @@ class Crawl extends CI_Controller{
 		$content = preg_replace('/\s+/m', ' ', $content);
 		if ($cat_id === 'sticky_recent_article') {
 			$sticky_content = strstr($content, 'Sticky & Recent Articles');
-			return $this->getCategoryDetail(0,0,$sticky_content);
+			return $this->getCategoryDetail($cat_id,0,$sticky_content);
 		}
 		else {
 			//echo $content;
@@ -66,6 +66,7 @@ class Crawl extends CI_Controller{
 				$result[$key]['url'] = str_replace($this->homepage_url, '', $posts[1][$key]);
 				$p_id = $result[$key]['url'];
 				$result[$key]['post_id'] = md5($p_id);
+				$result[$key]['cat_id'] = $cat_id;
 				$detail = $this->getDetail($p_id);
 				$result[$key]['img'] = $posts[2][$key];
 				if($detail != null) {
@@ -103,6 +104,7 @@ class Crawl extends CI_Controller{
 			$result[$key]['title'] = $value;
 			//$result[$key]['description'] = $contents[1][$key];
 			$result[$key]['url'] = str_replace($this->homepage_url, '', $headers[1][$key]);
+			$result[$key]['cat_id'] = $category_id;
 			$p_id = $result[$key]['url'];
 			$result[$key]['post_id'] = md5($p_id);
 			$result[$key]['img'] = $imgs[1][$key];
