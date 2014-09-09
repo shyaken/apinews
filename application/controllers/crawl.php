@@ -120,8 +120,10 @@ class Crawl extends CI_Controller{
 		foreach($params as $record) {
 			$checkExist = $this->db->get_where('records',array('post_id' => $record['post_id']));	
 			if(count($checkExist) > 0) {
+				echo "existed record, continue";
 				continue;
 			}
+			echo "insterting record".json_encode($record);
 			$this->db->insert('records',$record);
 		}
 	}
