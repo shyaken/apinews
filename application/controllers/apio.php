@@ -90,7 +90,7 @@ class Apio extends CI_Controller {
 		//$response['category_list'] = array_merge($this->category,$this->specific_category);
 		if(isset($param['cat_id'])) {
 			$this->db->select('id, title, img');
-			$query = $this->db->get_where('records',array('cat_id' => $param['cat_id']),$param['page'] - 1, $this->post_per_page);
+			$query = $this->db->get_where('records',array('cat_id' => $param['cat_id']), $this->post_per_page,$param['page'] - 1);
 			print_r($query);
 		} else {
 			$response['status'] = false;
