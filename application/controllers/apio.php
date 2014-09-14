@@ -91,6 +91,7 @@ class Apio extends CI_Controller {
 		if(isset($param['cat_id'])) {
 			$this->db->select('id, title, img');
 			$query = $this->db->get_where('records',array('cat_id' => $param['cat_id']),$param['page'] - 1, $this->post_per_page);
+			print_r($query);
 		} else {
 			$response['status'] = false;
 			$response['message'] = "Please enter cat_id";
