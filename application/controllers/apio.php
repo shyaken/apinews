@@ -91,7 +91,6 @@ class Apio extends CI_Controller {
 		if(isset($param['cat_id'])) {
 			$this->db->select('id, title, img');
 			$query = $this->db->get_where('records',array('cat_id' => $param['cat_id']), $this->post_per_page,$param['page'] - 1);
-			print_r($query);
 		} else {
 			$response['status'] = false;
 			$response['message'] = "Please enter cat_id";
@@ -104,7 +103,6 @@ class Apio extends CI_Controller {
 		$ios_response = array ();
 		$ios_response['status'] = $response['status'];
 		unset($response['status']);
-		print_r($query->result());
 		foreach ($query->result() as $value) {
 			$ios_response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
