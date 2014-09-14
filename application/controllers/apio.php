@@ -103,7 +103,7 @@ class Apio extends CI_Controller {
 		$ios_response = array ();
 		$ios_response['status'] = $response['status'];
 		unset($response['status']);
-		print_r($query->result);
+		print_r($query->result());
 		foreach ($query->result() as $value) {
 			$ios_response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
