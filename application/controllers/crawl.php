@@ -53,7 +53,7 @@ class Crawl extends CI_Controller{
 		$content = preg_replace('/\s+/m', ' ', $content);
 		if ($cat_id === 'sticky_recent_article') {
 			$sticky_content = strstr($content, 'Sticky & Recent Articles');
-			return $this->getCategoryDetail($cat_id,0,$sticky_content);
+			return $this->getCategoryDetail($cat_id,$page,$sticky_content);
 		}
 		else {
 			//echo $content;
