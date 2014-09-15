@@ -212,7 +212,7 @@ class Apio extends CI_Controller {
 		}
 		$query = $this->db->get_where('records',array('id' => $param['id']));
 		$record = $query->first_row();
-		if($query->num_rows() < 1 || !isset($record['html_content'])) {
+		if(!isset($record['html_content'])) {
 			die("fuck");
 			$response = array (
 				'status' => false,
