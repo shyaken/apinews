@@ -35,6 +35,7 @@ class crawler extends CI_Controller{
 		'feature_article' => 'Featured Articles',
 		'sticky_recent_article' => 'Sticky & Recent Articles'
 		);
+	private $log_file_path = '/var/www/html/apinews/logs/';
 
 	public function crawlCat($cat_id,$page)
 	{
@@ -49,7 +50,7 @@ class crawler extends CI_Controller{
 		if ($page >= 2) {
 			$url .= "page/$page/";
 		}
-		file_put_contents('logurl.data', $url."\n",FILE_APPEND);
+		write_file($this->log_file_path.'logurl.data', $url."\n",'a+');
 		if($content === null) $content = file_get_contents($url);
 		$content = preg_replace('/\s+/m', ' ', $content);
 		if ($cat_id === 'sticky_recent_article') {
