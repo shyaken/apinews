@@ -120,6 +120,8 @@ class Crawl extends CI_Controller{
 			$detail = $this->getDetail($p_id);
 			if($detail != null) {
 				$result[$key] = array_merge($result[$key],$detail);
+			} else {
+				unset($result[$key]);
 			}
 		}
 		return $result;
@@ -156,7 +158,7 @@ class Crawl extends CI_Controller{
 		$response['html_content'] = $contents[1][0];
 		$response['raw_content'] = $raw_content;
 		if(isset($date[1][0])) {
-			$response['date'] = trim(str_replace('|', '', $date[1][0]));
+			$response['date'] = strtotime(trim(str_replace('|', '', $date[1][0])));
 			return $response;
 		} else {
 			return null;
@@ -177,7 +179,11 @@ class Crawl extends CI_Controller{
 		if (isset($_GET['all']) && $_GET['all'] == 1) {
 			unset($this->specific_category['feature_article']);
 			write_file($this->log_file_path.'logurl.data', "start crawl all data at ".date('Y-m-d H:i:s')."\n",'w+');
-			$current_page = 0;
+			if(!isset($_GET['start_page'])) {
+				$current_page = 0;
+			} else {
+				$current_page = $_GET['start_page'];
+			}
 			while ($current_page < 500) {
 				$current_page++;
 				echo "Crawling data for page $current_page\n";

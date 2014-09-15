@@ -68,8 +68,7 @@ class crawler extends CI_Controller{
 				$result[$key]['url'] = str_replace($this->homepage_url, '', $posts[1][$key]);
 				$p_id = $result[$key]['url'];
 				$result[$key]['post_id'] = md5($p_id.$cat_id);
-				$checkExist = $this->db->get_where('records',array('post_id' => $result[$key]['post_id']));	
-				if(!$this->checkExist($result[$key]['post_id'])) {
+				if($this->checkExist($result[$key]['post_id'])) {
 					continue;
 				}
 				$detail = $this->getDetail($p_id);
@@ -80,6 +79,15 @@ class crawler extends CI_Controller{
 			}
 			return $result;
 		}
+	}
+
+	private function checkExist($post_id)
+	{
+		$query = $this->db->get_where('records',array('post_id' => $post_id));	
+		if($query->num_rows() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	private function getCategoryDetail($category_id,$page,$content = null) {
@@ -122,8 +130,7 @@ class crawler extends CI_Controller{
 
 	public function updateDb($params) {
 		foreach($params as $record) {
-			$checkExist = $this->db->get_where('records',array('post_id' => $record['post_id']));	
-			if(count($checkExist) > 0) {
+			if($this->checkExist($record['post_id'])) {
 				continue;
 			}
 			$this->db->insert('records',$record);
@@ -160,7 +167,8 @@ class crawler extends CI_Controller{
 
 	public function main() {
 		echo "<pre>";
-		if (isset($_REQUEST['all']) && $_REQUEST['all'] == 1) {
+		if (isset($_GET['all']) && $_GET['all'] == 1) {
+			die("start get all ");
 			$current_page = 0;
 			while ($current_page < 500) {
 				$current_page++;
@@ -170,6 +178,7 @@ class crawler extends CI_Controller{
 				}
 			}
 		} else {
+			die ("start get one");
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$this->crawlCat($key,1);
 			}

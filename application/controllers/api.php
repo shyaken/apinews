@@ -35,7 +35,7 @@ class Api extends CI_Controller {
 		'feature_article' => 'Featured Articles',
 		'sticky_recent_article' => 'Sticky & Recent Articles'
 		);
-	private $num_of_page = 5;
+	private $post_per_page = 20;
 
 	public function index()
 	{
@@ -63,8 +63,6 @@ class Api extends CI_Controller {
 			$param['access_key'] = "";
 		}
 
-		$first_page = ($param['page'] - 1) * 5 + 1;
-
 		if (isset($_REQUEST['t'])) {
 			$param['time'] = $_REQUEST['t'];
 			$validate .= $param['time'];
@@ -91,12 +89,15 @@ class Api extends CI_Controller {
 		}
 		//$response['category_list'] = array_merge($this->category,$this->specific_category);
 		if(isset($param['cat_id'])) {
-			$res = array();
-			for ($i = 0 ; $i < $this->num_of_page; $i++) {
-				$res = array_merge($res, $this->getCategoryDetail($param['cat_id'],$first_page + $i));
-			}
-			$response[$param['cat_id']]	 = $res;
+			$this->db->select('id, title, img');
+			$this->db->where('date !=','');
+			$this->db->order_by('date','desc');
+			$query = $this->db->get_where('records',array('cat_id' => $param['cat_id']), $this->post_per_page,$param['page'] - 1);
 		} else {
+			$response['status'] = false;
+			$response['message'] = "Please enter cat_id";
+			echo json_encode($response);
+			die;
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
 			}
@@ -104,8 +105,8 @@ class Api extends CI_Controller {
 		$ios_response = array ();
 		$ios_response['status'] = $response['status'];
 		unset($response['status']);
-		foreach ($response as $key => $value) {
-			$ios_response['data'][] = array ('category' => $key, 'data' => $value);
+		foreach ($query->result() as $value) {
+			$ios_response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
 		die(json_encode($ios_response));
 		
@@ -211,31 +212,19 @@ class Api extends CI_Controller {
 		if($response['status'] === false) {
 			die(json_encode($response));
 		}
-		$content = file_get_contents($param['url']);
-		$content = preg_replace('/\s+/', ' ', $content);
-		$headers = array();
-		$contents = array();
-		$date = array();
-		$header_pattern = '/<h2 class="art-PostHeader"><a.*?>(.*?)<\/a><\/h2>/';
-		$content_pattern = '/<div class="art-PostContent">(.*?)<\/div> <div class="cleared">/';
-		$date_pattern = '/<img src=".*?PostDateIcon\.png.*?".*?>(.*?)<img/';
-		preg_match_all($header_pattern, $content, $headers);
-		preg_match_all($content_pattern, $content, $contents);
-		preg_match_all($date_pattern, $content, $date);
-		$raw_content = $contents[1][0];
-		$raw_content = preg_replace('/<[^>]*>/', " ", $raw_content);
-		$response['header'] = $headers[1][0];
-		$response['html_content'] = $contents[1][0];
-		//$response['content'] = $raw_content;
-		if(isset($date[1][0])) {
-			$response['date'] = trim(str_replace('|', '', $date[1][0]));
-		} else {
+		$this->db->select('title, date, html_content, raw_content, img');
+		$query = $this->db->get_where('records',array('id' => $param['id']));
+		$record = $query->first_row('array');
+		$record['date'] = date('F jS, Y',$record['date']);
+		$response = array_merge($response,$record);
+		if(!isset($record['html_content'])) {
 			$response = array (
 				'status' => false,
 				'message' => 'This page has been deleted'
 			);
 		}
-		die(json_encode($response));
+		echo json_encode($response);
+		die();
 	}
 
 	public function test() {
