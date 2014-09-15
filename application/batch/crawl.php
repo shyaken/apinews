@@ -49,6 +49,7 @@ class crawler extends CI_Controller{
 		if ($page >= 2) {
 			$url .= "page/$page/";
 		}
+		file_put_contents('logurl.data', $url."\n",FILE_APPEND);
 		if($content === null) $content = file_get_contents($url);
 		$content = preg_replace('/\s+/m', ' ', $content);
 		if ($cat_id === 'sticky_recent_article') {
