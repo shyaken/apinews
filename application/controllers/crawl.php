@@ -175,13 +175,17 @@ class Crawl extends CI_Controller{
 	public function main() {
 		echo "<pre>";
 		if (isset($_GET['all']) && $_GET['all'] == 1) {
+			unset($this->specific_category['feature_article']);
+			write_file($this->log_file_path.'logurl.data', "start crawl all data at ".date('Y-m-d H:i:s')."\n",'w+');
 			$current_page = 0;
 			while ($current_page < 500) {
 				$current_page++;
 				echo "Crawling data for page $current_page\n";
+				write_file($this->log_file_path.'logurl.data', "Crawling data for page $current_page\n";,'a+');
 				foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 					$this->crawlCat($key,$current_page);
 				}
+				write_file($this->log_file_path.'logurl.data', "End $current_page\n";,'a+');
 			}
 		} else {
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
