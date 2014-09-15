@@ -159,7 +159,8 @@ class crawler extends CI_Controller{
 	}
 
 	public function main() {
-		if (isset($_POST['all']) && $_POST['all'] == 1) {
+		echo "<pre>";
+		if (isset($_REQUEST['all']) && $_REQUEST['all'] == 1) {
 			$current_page = 0;
 			while ($current_page < 500) {
 				$current_page++;
@@ -173,6 +174,7 @@ class crawler extends CI_Controller{
 				$this->crawlCat($key,1);
 			}
 		}
+		echo "</pre>";
 	}
 }
 
