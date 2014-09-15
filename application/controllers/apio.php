@@ -210,12 +210,15 @@ class Apio extends CI_Controller {
 		if($response['status'] === false) {
 			die(json_encode($response));
 		}
-		//$response['content'] = $raw_content;
-		if(!(isset($response['html_content']) && $response['html_content'] != "")) {
+		$query = $this->db->get('records',array('id' => $param['id']));
+		$record = $query->first_row();
+		if($query->num_rows() === 0 || !isset($record['html_content'])) {
 			$response = array (
 				'status' => false,
 				'message' => 'This page has been deleted'
 			);
+		} else {
+			$response = array_merge($response,$record);
 		}
 		die(json_encode($response));
 	}
