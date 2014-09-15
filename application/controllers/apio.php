@@ -211,7 +211,7 @@ class Apio extends CI_Controller {
 			die(json_encode($response));
 		}
 		$query = $this->db->get_where('records',array('id' => $param['id']));
-		$record = $query->first_row();
+		$record = $query->first_row('array');
 		$response = array_merge($response,$record);
 		print_r($response);
 		if(!isset($record['html_content'])) {
