@@ -210,7 +210,7 @@ class Apio extends CI_Controller {
 		if($response['status'] === false) {
 			die(json_encode($response));
 		}
-		$this->db->select('title','date','html_content','raw_content','img');
+		$this->db->select('title, date, html_content, raw_content, img');
 		$query = $this->db->get_where('records',array('id' => $param['id']));
 		$record = $query->first_row('array');
 		print_r($record);
