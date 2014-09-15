@@ -212,7 +212,7 @@ class Apio extends CI_Controller {
 		}
 		$query = $this->db->get('records',array('id' => $param['id']));
 		$record = $query->first_row();
-		echo $query->num_rows();
+		print_r($record);
 		if($query->num_rows() === 0 || !isset($record['html_content'])) {
 			$response = array (
 				'status' => false,
