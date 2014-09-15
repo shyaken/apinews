@@ -214,12 +214,13 @@ class Apio extends CI_Controller {
 		$record = $query->first_row();
 		print_r($record);
 		if($query->num_rows() === 0 || !isset($record['html_content'])) {
+			die("fuck");
 			$response = array (
 				'status' => false,
 				'message' => 'This page has been deleted'
 			);
 		} else {
-			echo 	"yeah";
+			die("yeah");
 			$response = array_merge($response,$record);
 		}
 		echo json_encode($response);
