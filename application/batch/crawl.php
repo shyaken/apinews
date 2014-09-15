@@ -55,7 +55,7 @@ class crawler extends CI_Controller{
 		$content = preg_replace('/\s+/m', ' ', $content);
 		if ($cat_id === 'sticky_recent_article') {
 			$sticky_content = strstr($content, 'Sticky & Recent Articles');
-			return $this->getCategoryDetail(0,0,$sticky_content);
+			return $this->getCategoryDetail($cat_id,$page,$sticky_content);
 		}
 		else {
 			//echo $content;
@@ -67,7 +67,11 @@ class crawler extends CI_Controller{
 				//$result[$key]['description'] = $posts[4][$key];
 				$result[$key]['url'] = str_replace($this->homepage_url, '', $posts[1][$key]);
 				$p_id = $result[$key]['url'];
-				$result[$key]['post_id'] = md5($p_id);
+				$result[$key]['post_id'] = md5($p_id.$cat_id);
+				$checkExist = $this->db->get_where('records',array('post_id' => $result[$key]['post_id']));	
+				if(!$this->checkExist($result[$key]['post_id'])) {
+					continue;
+				}
 				$detail = $this->getDetail($p_id);
 				$result[$key]['img'] = $posts[2][$key];
 				if($detail != null) {
@@ -106,7 +110,7 @@ class crawler extends CI_Controller{
 			//$result[$key]['description'] = $contents[1][$key];
 			$result[$key]['url'] = str_replace($this->homepage_url, '', $headers[1][$key]);
 			$p_id = $result[$key]['url'];
-			$result[$key]['post_id'] = md5($p_id);
+			$result[$key]['post_id'] = md5($p_id.$category_id);
 			$result[$key]['img'] = $imgs[1][$key];
 			$detail = $this->getDetail($p_id);
 			if($detail != null) {
@@ -146,7 +150,7 @@ class crawler extends CI_Controller{
 		$raw_content = preg_replace('/<[^>]*>/', " ", $raw_content);
 		$response['html_content'] = $contents[1][0];
 		$response['raw_content'] = $raw_content;
-		if(isset($date[1][0])) {
+		if(isset($date[1][0]) && $date[1][0] != "") {
 			$response['date'] = trim(str_replace('|', '', $date[1][0]));
 			return $response;
 		} else {
