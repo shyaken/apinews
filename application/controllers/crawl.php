@@ -65,8 +65,11 @@ class Crawl extends CI_Controller{
 				//$result[$key]['description'] = $posts[4][$key];
 				$result[$key]['url'] = str_replace($this->homepage_url, '', $posts[1][$key]);
 				$p_id = $result[$key]['url'];
-				$result[$key]['post_id'] = md5($p_id);
+				$result[$key]['post_id'] = md5($p_id.$cat_id);
 				$result[$key]['cat_id'] = $cat_id;
+				if($this->checkExist($result[$key]['post_id'])) {
+					continue;
+				}
 				$detail = $this->getDetail($p_id);
 				$result[$key]['img'] = $posts[2][$key];
 				if($detail != null) {
@@ -106,8 +109,11 @@ class Crawl extends CI_Controller{
 			$result[$key]['url'] = str_replace($this->homepage_url, '', $headers[1][$key]);
 			$result[$key]['cat_id'] = $category_id;
 			$p_id = $result[$key]['url'];
-			$result[$key]['post_id'] = md5($p_id);
+			$result[$key]['post_id'] = md5($p_id.$category_id);
 			$result[$key]['img'] = $imgs[1][$key];
+			if($this->checkExist($result[$key]['post_id'])) {
+				continue;
+			}
 			$detail = $this->getDetail($p_id);
 			if($detail != null) {
 				$result[$key] = array_merge($result[$key],$detail);
@@ -118,8 +124,7 @@ class Crawl extends CI_Controller{
 
 	public function updateDb($params) {
 		foreach($params as $record) {
-			$checkExist = $this->db->get_where('records',array('post_id' => $record['post_id']));	
-			if(intval($checkExist->num_rows) > 0) {
+			if($this->checkExist($record['post_id'])) {
 				echo "existed record, continue";
 				continue;
 			}
@@ -155,8 +160,19 @@ class Crawl extends CI_Controller{
 		}
 	}
 
+	private function checkExist($post_id)
+	{
+		$query = $this->db->get_where('records',array('post_id' => $post_id));	
+		if($query->num_rows() > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	public function main() {
-		if (isset($_POST['all']) && $_POST['all'] == 1) {
+		echo "<pre>";
+		if (isset($_GET['all']) && $_GET['all'] == 1) {
+			die("start get all ");
 			$current_page = 0;
 			while ($current_page < 500) {
 				$current_page++;
@@ -166,10 +182,12 @@ class Crawl extends CI_Controller{
 				}
 			}
 		} else {
+			die ("start get one");
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$this->crawlCat($key,1);
 			}
 		}
+		echo "</pre>";
 	}
 }
 
