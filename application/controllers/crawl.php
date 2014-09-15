@@ -36,6 +36,8 @@ class Crawl extends CI_Controller{
 		'sticky_recent_article' => 'Sticky & Recent Articles'
 		);
 
+	private $log_file_path = '/var/www/html/apinews/logs/';
+
 	public function crawlCat($cat_id,$page)
 	{
 		echo "Start crawling content for $cat_id at page $page\n";
@@ -93,6 +95,7 @@ class Crawl extends CI_Controller{
 			$content = preg_replace('/\s+/m', " ", $content);
 		}
 		
+		write_file($this->log_file_path.'logurl.data', $url."\n",'a+');
 		$header_pattern = '/<h2 class="PostHeaderIcon-wrapper" style="margin:0;padding:0;"><a href="(.*?)".*?>(.*?)<\/a><\/h2>/';
 		//$content_pattern = '/<div class="cContent"><p>(.*?)<a/m';
 		$img_pattern = '/<div class="PostContent"> <a href=".*?" rel="bookmark" title=".*?"><img class="alignleft" src="(.*?)" .*?><\/a>/';
@@ -172,7 +175,6 @@ class Crawl extends CI_Controller{
 	public function main() {
 		echo "<pre>";
 		if (isset($_GET['all']) && $_GET['all'] == 1) {
-			die("start get all ");
 			$current_page = 0;
 			while ($current_page < 500) {
 				$current_page++;
@@ -182,7 +184,6 @@ class Crawl extends CI_Controller{
 				}
 			}
 		} else {
-			die ("start get one");
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$this->crawlCat($key,1);
 			}
