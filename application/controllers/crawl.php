@@ -83,7 +83,7 @@ class Crawl extends CI_Controller{
 	}
 
 	private function getCategoryDetail($category_id,$page,$content = null) {
-		if (isset($this->specific_category[$category_id])) {
+		if (isset($this->specific_category[$category_id]) && $content === null) {
 			return $this->getSpecificCat($category_id,$page);
 		}
 		if($content === null) {
