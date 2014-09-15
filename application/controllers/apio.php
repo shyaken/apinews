@@ -212,8 +212,8 @@ class Apio extends CI_Controller {
 		}
 		$this->db->select('title','date','html_content','raw_content','img');
 		$query = $this->db->get_where('records',array('id' => $param['id']));
-		print_r($query->first_row);
 		$record = $query->first_row('array');
+		print_r($record);
 		$response = array_merge($response,$record);
 		if(!isset($record['html_content'])) {
 			$response = array (
