@@ -111,14 +111,11 @@ class Api extends CI_Controller {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
 			}
 		}
-		$ios_response = array ();
-		$ios_response['status'] = $response['status'];
-		$ios_response['data_count'] = $query->num_rows();
-		unset($response['status']);
+		$response['data_count'] = $query->num_rows();
 		foreach ($query->result() as $value) {
-			$ios_response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
+			$response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
-		die(json_encode($ios_response));
+		die(json_encode($response));
 		
 	}
 
