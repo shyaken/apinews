@@ -195,6 +195,7 @@ class Crawl extends CI_Controller{
 				write_file($this->log_file_path.'logurl.data', "End $current_page\n",'a+');
 			}
 		} else {
+			write_file($this->log_file_path.'logurl.data', "start crawl new data at ".date('Y-m-d H:i:s')."\n",'a+');
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$this->crawlCat($key,1);
 				$this->crawlCat($key,2);
