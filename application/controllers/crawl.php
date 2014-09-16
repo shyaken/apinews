@@ -133,7 +133,7 @@ class Crawl extends CI_Controller{
 				echo "existed record, continue";
 				continue;
 			}
-			$record['crawl_time'] = 1410862830;
+			$record['crawl_time'] = time();
 			$this->db->insert('records',$record);
 		}
 	}
