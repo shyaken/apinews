@@ -102,7 +102,6 @@ class Api extends CI_Controller {
 			}
 			$this->db->order_by('date','desc');
 			$query = $this->db->get('records');
-			echo $this->db->last_query();
 		} else {
 			$response['status'] = false;
 			$response['message'] = "Please enter cat_id";
@@ -114,11 +113,7 @@ class Api extends CI_Controller {
 		}
 		$ios_response = array ();
 		$ios_response['status'] = $response['status'];
-		if($query->num_rows() > 0) {
-			$ios_response['has_data'] = true;
-		} else {
-			$ios_response['has_data'] = false;
-		}
+		$ios_response['data_count'] = $query->num_rows();
 		unset($response['status']);
 		foreach ($query->result() as $value) {
 			$ios_response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
