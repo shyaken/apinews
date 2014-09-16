@@ -102,6 +102,7 @@ class Api extends CI_Controller {
 			}
 			$this->db->order_by('date','desc');
 			$query = $this->db->get('records');
+			echo $this->db->last_query();
 		} else {
 			$response['status'] = false;
 			$response['message'] = "Please enter cat_id";
