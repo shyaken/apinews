@@ -91,8 +91,17 @@ class Api extends CI_Controller {
 		if(isset($param['cat_id'])) {
 			$this->db->select('id, title, img');
 			$this->db->where('date !=','');
+			$this->db->where('cat_id',$param['cat_id']);
+			if(!isset($_REQUEST['get_news']) || !isset($_REQUEST['last_update'])) {
+				$offset = ($param['page'] - 1) * $this->post_per_page;
+				$this->db->limit($this->post_per_page,$offset)
+			} else {
+				$last_update = intval($_REQUEST['last_update']);
+				$this->db->where('crawl_time >',$last_update);
+				$response['last_update'] = time();
+			}
 			$this->db->order_by('date','desc');
-			$query = $this->db->get_where('records',array('cat_id' => $param['cat_id']), $this->post_per_page,$param['page'] - 1);
+			$query = $this->db->get('records');
 		} else {
 			$response['status'] = false;
 			$response['message'] = "Please enter cat_id";
@@ -104,6 +113,11 @@ class Api extends CI_Controller {
 		}
 		$ios_response = array ();
 		$ios_response['status'] = $response['status'];
+		if($query->num_rows() > 0) {
+			$ios_response['has_data'] = true;
+		} else {
+			$ios_response['has_data'] = false;
+		}
 		unset($response['status']);
 		foreach ($query->result() as $value) {
 			$ios_response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);

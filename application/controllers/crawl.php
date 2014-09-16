@@ -133,6 +133,7 @@ class Crawl extends CI_Controller{
 				echo "existed record, continue";
 				continue;
 			}
+			$record['crawl_time'] = time();
 			$this->db->insert('records',$record);
 		}
 	}
@@ -196,6 +197,8 @@ class Crawl extends CI_Controller{
 		} else {
 			foreach (array_merge($this->category, $this->specific_category) as $key => $value) {
 				$this->crawlCat($key,1);
+				$this->crawlCat($key,2);
+				$this->crawlCat($key,3);
 			}
 		}
 		echo "</pre>";
