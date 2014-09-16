@@ -133,7 +133,7 @@ class Crawl extends CI_Controller{
 				echo "existed record, continue";
 				continue;
 			}
-			$record['crawl_time'] = time();
+			$record['crawl_time'] = 1410862830;
 			$this->db->insert('records',$record);
 		}
 	}
@@ -185,7 +185,7 @@ class Crawl extends CI_Controller{
 			} else {
 				$current_page = $_GET['start_page'];
 			}
-			while ($current_page < 500) {
+			while ($current_page < 5000) {
 				$current_page++;
 				echo "Crawling data for page $current_page\n";
 				write_file($this->log_file_path.'logurl.data', "Crawling data for page $current_page\n",'a+');
