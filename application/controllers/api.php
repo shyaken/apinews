@@ -225,7 +225,7 @@ class Api extends CI_Controller {
 		$this->db->select('title, date, html_content, raw_content, img');
 		$query = $this->db->get_where('records',array('id' => $param['id']));
 		$record = $query->first_row('array');
-		$record['date'] = date('F jS, Y',$record['date']);
+		$record['date'] = date('D, d M Y',$record['date']);
 		$response = array_merge($response,$record);
 		if(!isset($record['html_content'])) {
 			$response = array (
