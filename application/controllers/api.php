@@ -111,14 +111,11 @@ class Api extends CI_Controller {
 				$response[$key] = $this->getCategoryDetail($key,$param['page']);
 			}
 		}
-		$ios_response = array ();
-		$ios_response['status'] = $response['status'];
-		$ios_response['data_count'] = $query->num_rows();
-		unset($response['status']);
+		$response['data_count'] = $query->num_rows();
 		foreach ($query->result() as $value) {
-			$ios_response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
+			$response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
-		die(json_encode($ios_response));
+		die(json_encode($response));
 		
 	}
 
@@ -225,7 +222,9 @@ class Api extends CI_Controller {
 		$this->db->select('title, date, html_content, raw_content, img');
 		$query = $this->db->get_where('records',array('id' => $param['id']));
 		$record = $query->first_row('array');
+		$response['unix_time'] = $record['date'];
 		$record['date'] = date('D, d M Y',$record['date']);
+		$record['html_content'] = preg_replace('/<img.*?>/', '', $record['html_content'],1);
 		$response = array_merge($response,$record);
 		if(!isset($record['html_content'])) {
 			$response = array (
