@@ -225,7 +225,7 @@ class Api extends CI_Controller {
 		$response['unix_time'] = $record['date'];
 		$record['date'] = date('D, d M Y',$record['date']);
 		$record['html_content'] = preg_replace('/<img.*?>/', '', $record['html_content'],1);
-		$record['html_content'] = str_replace(array('&#8217;','’'), "'", $record['html_content'],1);
+		str_replace(array('&#8217;','’'), "'", $record['html_content']);
 		$response = array_merge($response,$record);
 		if(!isset($record['html_content'])) {
 			$response = array (
