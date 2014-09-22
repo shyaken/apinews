@@ -235,6 +235,7 @@ class Api extends CI_Controller {
 		}
 		$response_str = json_encode($response);
 		str_replace(array('&#8217;','’'), "'", $response_str);
+		$response_str = preg_replace('/&#8217;/', "'", $response_str);
 		echo $response_str;
 		die();
 	}
