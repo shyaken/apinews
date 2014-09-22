@@ -233,8 +233,8 @@ class Api extends CI_Controller {
 				'message' => 'This page has been deleted'
 			);
 		}
-		$response = json_encode($response);
-		str_replace(array('&#8217;','’'), "'", $response);
+		$response_str = json_encode($response);
+		str_replace(array('&#8217;','’'), "'", $response_str);
 		die();
 	}
 
