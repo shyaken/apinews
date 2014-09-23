@@ -115,7 +115,10 @@ class Api extends CI_Controller {
 		foreach ($query->result() as $value) {
 			$response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
-		die(json_encode($response));
+		$response_str = json_encode($response)
+		$response_str = preg_replace('/&#8217;/', "'", $response_str);
+		echo $response_str;
+		die();
 		
 	}
 
