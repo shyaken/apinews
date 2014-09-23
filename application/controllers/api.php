@@ -95,6 +95,7 @@ class Api extends CI_Controller {
 			if(!isset($_REQUEST['get_news']) || !isset($_REQUEST['last_update'])) {
 				$offset = ($param['page'] - 1) * $this->post_per_page;
 				$this->db->limit($this->post_per_page,$offset);
+				$response['last_update'] = time();
 			} else {
 				$last_update = intval($_REQUEST['last_update']);
 				$this->db->where('crawl_time >',$last_update);
