@@ -36,7 +36,7 @@ class Crawl extends CI_Controller{
 		'sticky_recent_article' => 'Sticky & Recent Articles'
 		);
 
-	private $log_file_path = '/var/www/html/apinews/logs/';
+	private $log_file_path = '/var/www/trrapi/logs/';
 
 	public function crawlCat($cat_id,$page)
 	{
