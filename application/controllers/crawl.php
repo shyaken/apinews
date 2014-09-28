@@ -86,6 +86,7 @@ class Crawl extends CI_Controller{
 		if (isset($this->specific_category[$category_id]) && $content === null) {
 			return $this->getSpecificCat($category_id,$page);
 		}
+		$url = $this->homepage_url."/page/$page";
 		if($content === null) {
 			$url = $this->homepage_url."category/".$category_id."/";
 			if (intval($page) > 1) {
