@@ -89,7 +89,7 @@ class Api extends CI_Controller {
 		}
 		//$response['category_list'] = array_merge($this->category,$this->specific_category);
 		if(isset($param['cat_id'])) {
-			$this->db->select('id, title, img');
+			$this->db->select('id, title, img, date');
 			$this->db->where('date !=','');
 			$this->db->where('cat_id',$param['cat_id']);
 			if(!isset($_REQUEST['get_news']) || !isset($_REQUEST['last_update'])) {
@@ -114,11 +114,13 @@ class Api extends CI_Controller {
 		}
 		$response['data_count'] = $query->num_rows();
 		foreach ($query->result() as $value) {
+			$value['unix_time'] = $value['date'];
+			$value['date'] = date('D, d M Y',$value['date']);
 			$response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
 		$response_str = json_encode($response);
 		$response_str = preg_replace('/&#8217;/', "'", $response_str);
-		echo html_entity_decode($response_str);
+		echo $response_str;
 		die();
 		
 	}
@@ -240,7 +242,7 @@ class Api extends CI_Controller {
 		$response_str = json_encode($response);
 		str_replace(array('&#8217;','’'), "'", $response_str);
 		$response_str = preg_replace('/&#8217;/', "'", $response_str);
-		echo html_entity_decode($response_str);
+		echo $response_str;
 		die();
 	}
 
