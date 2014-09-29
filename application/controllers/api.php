@@ -114,8 +114,8 @@ class Api extends CI_Controller {
 		}
 		$response['data_count'] = $query->num_rows();
 		foreach ($query->result() as $value) {
-			$value['unix_time'] = $value['date'];
-			$value['date'] = date('D, d M Y',$value['date']);
+			$value->unix_time = $value->date;
+			$value->date = date('D, d M Y',$value->date);
 			$response['data'][] = array ('category' => $param['cat_id'], 'data' => $value);
 		}
 		$response_str = json_encode($response);
