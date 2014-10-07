@@ -230,7 +230,7 @@ class Api extends CI_Controller {
 		$record = $query->first_row('array');
 		$response['unix_time'] = $record['date'];
 		$record['date'] = date('D, d M Y',$record['date']);
-		$record['html_content'] = trim(preg_replace('/<img.*?>/', '', $record['html_content'],1)," '\t\r\n\0\x0B");
+		$record['html_content'] = trim(preg_replace('/<img.*?>/', '', $record['html_content'],1)," \t\r\n\0\x0B");
 		str_replace(array('&#8217;','’'), "'", $record['html_content']);
 		$response = array_merge($response,$record);
 		if(!isset($record['html_content'])) {
@@ -242,8 +242,8 @@ class Api extends CI_Controller {
 		$response_str = json_encode($response);
 		str_replace(array('&#8217;','’'), "'", $response_str);
 		$response_str = preg_replace('/&#8217;/', "'", $response_str);
-		$response_str = preg_replace('/<div class="bottomcontainerBox".*?>.*?div>$/', "'", $response_str);
-		$response_str = preg_replace('/<iframe.*?>/', "'", $response_str);
+		$response_str = preg_replace('/<div\sclass="bottomcontainerBox".*?>.*?>$/', "", $response_str);
+		$response_str = preg_replace('/<iframe.*?>/', "", $response_str);
 		echo html_entity_decode($response_str);
 		die();
 	}
