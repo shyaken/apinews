@@ -242,7 +242,7 @@ class Api extends CI_Controller {
 		$response_str = json_encode($response);
 		str_replace(array('&#8217;','’'), "'", $response_str);
 		$response_str = preg_replace('/&#8217;/', "'", $response_str);
-		$response_str = preg_replace('/<div\sclass="bottomcontainerBox".*?>.*?\z/m', "", $response_str);
+		$response_str = preg_replace('/<div\sclass="bottomcontainerBox".*?>/m', "", $response_str);
 		$response_str = preg_replace('/<iframe.*?>/', "", $response_str);
 		echo html_entity_decode($response_str);
 		die();
