@@ -155,11 +155,11 @@ class Crawl extends CI_Controller{
 		preg_match_all($header_pattern, $content, $headers);
 		preg_match_all($content_pattern, $content, $contents);
 		preg_match_all($date_pattern, $content, $date);
-		$raw_content = $contents[1][0];
-		$raw_content = preg_replace('/<[^>]*>/', " ", $raw_content);
-		$response['html_content'] = $contents[1][0];
-		$response['raw_content'] = $raw_content;
-		if(isset($date[1][0])) {
+		if(isset($date[1][0]) && isset($contents[1][0]) ) {
+			$raw_content = $contents[1][0];
+			$raw_content = preg_replace('/<[^>]*>/', " ", $raw_content);
+			$response['html_content'] = $contents[1][0];
+			$response['raw_content'] = $raw_content;
 			$response['date'] = strtotime(trim(str_replace('|', '', $date[1][0])));
 			return $response;
 		} else {
