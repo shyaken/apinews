@@ -67,12 +67,12 @@ class Api extends CI_Controller {
 			$param['time'] = $_REQUEST['t'];
 			$validate .= $param['time'];
 			$timediff = abs($param['time'] - time());
-			if ($timediff > 24*60*60) {
-				$response['status'] = false;
-				$response['message'] = "access_key has been expired";
-				echo json_encode($response);
-				die;
-			}
+			// if ($timediff > 24*60*60) {
+			// 	$response['status'] = false;
+			// 	$response['message'] = "access_key has been expired";
+			// 	echo json_encode($response);
+			// 	die;
+			// }
 		} else { 
 			$param['time'] = time();
 			$validate .= $param['time'];
