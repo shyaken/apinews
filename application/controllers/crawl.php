@@ -59,7 +59,7 @@ class Crawl extends CI_Controller{
 		}
 		else {
 			//echo $content;
-			$post_pattern = '/<div class="board_item"> <p><a href="(.*?)"><img src="(.*?)".*?>.*?<a.*?>(.*?)<\/a><\/strong>(.*?)<\/p>/';
+			$post_pattern = '/<div class="board_item"> <!-- board_item --> <p><a href="(.*?)"><img src="(.*?)".*?>.*?<a.*?>(.*?)<\/a><\/strong>(.*?)<\/p>/';
 			preg_match_all($post_pattern, $content, $posts);
 			$result = array();
 			foreach ($posts[0] as $key => $value) {
@@ -131,7 +131,7 @@ class Crawl extends CI_Controller{
 	public function updateDb($params) {
 		foreach($params as $record) {
 			if($this->checkExist($record['post_id'])) {
-				echo "existed record, continue";
+				echo "existed record, continue\n";
 				continue;
 			}
 			$record['crawl_time'] = time();
@@ -176,7 +176,16 @@ class Crawl extends CI_Controller{
 		return false;
 	}
 
+	private function log($message = '',$level = 'debug') {
+		if(is_array($message) || is_object($message)) {
+			$message = print_r($message,1);
+		}
+		$message .= "\n";
+		file_put_contents($this->log_file_path.$level.'.log', $message,FILE_APPEND);
+	}
+
 	public function main() {
+		ini_set("max_execution_time",0); 
 		echo "<pre>";
 		if (isset($_GET['all']) && $_GET['all'] == 1) {
 			unset($this->specific_category['feature_article']);
