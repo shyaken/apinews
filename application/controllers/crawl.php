@@ -131,7 +131,7 @@ class Crawl extends CI_Controller{
 	public function updateDb($params) {
 		foreach($params as $record) {
 			if($this->checkExist($record['post_id'])) {
-				echo "existed record, continue\n";
+				echo $record['post_id'] . " existed record, continue\n";
 				continue;
 			}
 			$record['crawl_time'] = time();
