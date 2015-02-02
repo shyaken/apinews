@@ -59,7 +59,7 @@ class Crawl extends CI_Controller{
 		}
 		else {
 			//echo $content;
-			$post_pattern = '/<div class="board_item">(.*?)<p><a href="(.*?)"><img src="(.*?)".*?>.*?<a.*?>(.*?)<\/a><\/strong>(.*?)<\/p>/';
+			$post_pattern = '/<div class="board_item">.*?<p><a href="(.*?)"><img src="(.*?)".*?>.*?<a.*?>(.*?)<\/a><\/strong>(.*?)<\/p>/';
 			preg_match_all($post_pattern, $content, $posts);
 			$result = array();
 			foreach ($posts[0] as $key => $value) {
